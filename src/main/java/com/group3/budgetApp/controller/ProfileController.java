@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@CrossOrigin("http://localhost:4200")
+@CrossOrigin("https://budgetapp-client.herokuapp.com")
 @RequestMapping("/budget")
 public class ProfileController {
 
@@ -50,19 +50,18 @@ public class ProfileController {
     public ResponseEntity<String> deleteUser(@PathVariable Integer id) {
         try {
             userService.deleteUser(id);
-            return new ResponseEntity<>("Profile Deleted", HttpStatus.OK);
+            return new ResponseEntity<>("Profile deleted", HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Profile does not exist", HttpStatus.NOT_FOUND);
         }
     }
 
     @PutMapping("/profile/{id}")
-    public ResponseEntity<String> updateUser(@PathVariable Integer id, @RequestBody Profile profile) {
+    public ResponseEntity<Profile> updateUser(@PathVariable Integer id, @RequestBody Profile profile) {
         try {
-            userService.updateUser(profile, id);
-            return new ResponseEntity<>("Profile Updated", HttpStatus.OK);
+            return new ResponseEntity<>(userService.updateUser(profile, id), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>("No Profile Found", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
     }
 
@@ -77,7 +76,7 @@ public class ProfileController {
                 return new ResponseEntity<>(userService.findByUsername(username), HttpStatus.OK);
             }
         } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
 
     }
@@ -101,7 +100,7 @@ public class ProfileController {
                 return new ResponseEntity<>(profileList, HttpStatus.OK);
             }
         } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
     }
 
@@ -115,7 +114,7 @@ public class ProfileController {
                 return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
             }
         } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
     }
 }
