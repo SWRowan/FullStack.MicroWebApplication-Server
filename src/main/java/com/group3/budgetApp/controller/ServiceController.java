@@ -22,7 +22,7 @@ public class ServiceController {
     }
 
     @PostMapping("/account")
-    public ResponseEntity<Account> accountCreate(@RequestBody Account account){
+    public ResponseEntity<Account> accountCreate(@RequestBody Account account) throws InvalidTransactionAmount {
         try {
             if(account != null){
                 Account acc = accountService.createAccount(account);
