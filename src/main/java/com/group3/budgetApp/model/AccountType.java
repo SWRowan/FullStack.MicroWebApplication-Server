@@ -1,11 +1,13 @@
 package com.group3.budgetApp.model;
 
+import lombok.Data;
 
 import javax.persistence.*;
 
 @Entity
-@Table(name = "TRANSACTION_type")
-public class TransactionType {
+@Data
+@Table(name = "account_type")
+public class AccountType {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,9 +17,9 @@ public class TransactionType {
     @Column(name="description")
     private String description;
 
-    public TransactionType() {}
+    public AccountType() {}
 
-    public TransactionType(String description) {
+    public AccountType(String description) {
         this.description = description;
     }
 
@@ -25,6 +27,9 @@ public class TransactionType {
         return Id;
     }
 
+    public void setId(Integer id) {
+        Id = id;
+    }
 
     public String getDescription() {
         return description;

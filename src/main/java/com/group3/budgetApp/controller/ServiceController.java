@@ -1,5 +1,6 @@
 package com.group3.budgetApp.controller;
 
+import com.group3.budgetApp.exceptions.InvalidTransactionAmount;
 import com.group3.budgetApp.model.Account;
 import com.group3.budgetApp.services.AccountServices;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@CrossOrigin("http://localhost:4200")
+@CrossOrigin("https://budgetapp-client.herokuapp.com")
 @RequestMapping("/budget")
 public class ServiceController {
     private AccountServices accountService;
@@ -21,28 +22,27 @@ public class ServiceController {
     }
 
     @PostMapping("/account")
-    public ResponseEntity<Account> accountCreate(@RequestBody Account account){
+    public ResponseEntity<Account> accountCreate(@RequestBody Account account) throws InvalidTransactionAmount {
         try {
-            accountService.createAccount(account);
-            return new ResponseEntity<>(null, HttpStatus.CREATED);
+            if(account != null){
+                Account acc = accountService.createAccount(account);
+                return new ResponseEntity<>(acc, HttpStatus.CREATED);
+            } else {
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            }
         }
-        catch (IllegalArgumentException iae){
+        catch (IllegalArgumentException | InvalidTransactionAmount iae){
             System.err.println(iae.getMessage());
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
-        catch (Exception e){
-            System.err.println(e.getMessage());
-            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-        }
     }
     @DeleteMapping("/account/{id}")
-    public HttpStatus accountRemove(@PathVariable Integer id){
-        try{
+    public ResponseEntity<String> accountRemove(@PathVariable Integer id){
+        try {
             accountService.deleteAccount(id);
-            return HttpStatus.OK;
-        }
-        catch (Exception e){
-            return HttpStatus.INTERNAL_SERVER_ERROR;
+            return new ResponseEntity<>("Account Deleted", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     @GetMapping("/account/{id}")

@@ -80,7 +80,7 @@ public class ProfileControllerTest {
         String expectedPro = responseEntity.getBody();
         //Then
         Assert.assertEquals(expected, actual);
-        Assert.assertEquals("Profile Deleted", expectedPro);
+        Assert.assertEquals("Profile deleted", expectedPro);
     }
 
     @Test
@@ -158,4 +158,17 @@ public class ProfileControllerTest {
         Assert.assertEquals(expected, actual);
         Assert.assertEquals(profile, expectedPro);
     }
+
+    @Test
+    public void testFindException() throws ResourceNotFound {
+        HttpStatus expected = HttpStatus.NOT_FOUND;
+        BDDMockito
+                .given(services.findById(99))
+                .willReturn(null);
+        //When
+        ResponseEntity responseEntity = controller.getUser(99);
+        HttpStatus actual = responseEntity.getStatusCode();
+        Assert.assertEquals(expected, actual);
+    }
+
 }
